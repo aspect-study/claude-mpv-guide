@@ -266,17 +266,6 @@
                     </div>
                 </button>
 
-                <button onclick="switchTab('automation')" id="btn-automation"
-                    class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
-                    <div class="p-2 bg-slate-800 text-slate-400 rounded-lg group-hover:bg-slate-700 transition">
-                        <i class="fa-solid fa-repeat text-base"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Part 3</div>
-                        <div class="font-bold text-sm text-slate-300">Automation Blueprint</div>
-                        <p class="text-xs text-slate-500 mt-0.5">Routines & scheduled tasks that run themselves.</p>
-                    </div>
-                </button>
             </div>
 
             <!-- Content Area -->
@@ -295,10 +284,6 @@
                     <button onclick="switchTab('phase3')" id="mob-btn-phase3"
                         class="mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-semibold">
                         <i class="fa-solid fa-arrow-pointer"></i> Phase 3
-                    </button>
-                    <button onclick="switchTab('automation')" id="mob-btn-automation"
-                        class="mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-semibold">
-                        <i class="fa-solid fa-repeat"></i> Automation
                     </button>
                 </div>
 
@@ -522,66 +507,68 @@ claude</pre>
                     </div>
                 </div>
 
-                <!-- AUTOMATION WINDOW -->
-                <div id="content-automation" class="tab-content hidden space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
-                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-purple-500/20 shrink-0">Routines & Schedules</span>
-                                <h3 class="text-base sm:text-lg font-bold text-white">Part 3 — The Automation Blueprint</h3>
-                            </div>
-                            <span class="text-xs text-slate-500 font-mono shrink-0">Hands-Free</span>
+            </div>
+        </div>
+
+        <!-- Part 3 — Automation Blueprint -->
+        <section class="bg-slate-900/40 border border-slate-800 rounded-2xl p-4 sm:p-6">
+            <div class="flex items-center space-x-2 mb-4">
+                <i class="fa-solid fa-repeat text-purple-400 text-base shrink-0"></i>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Part 3 — Automation Blueprint</h2>
+            </div>
+            <p class="text-sm text-slate-300 leading-relaxed mb-5">
+                As a solo developer, you can't afford to waste time on repetitive daily checkups. You must automate your routines. Set these up once and let them run — freeing you to focus entirely on shipping product.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Card 1: Codebase Routines -->
+                <div class="bg-slate-950/60 border border-emerald-500/15 rounded-xl p-4 sm:p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-square-terminal text-emerald-400 text-xs"></i>
                         </div>
-
-                        <p class="text-sm text-slate-300 leading-relaxed mb-5">
-                            As a solo developer, you can't afford to waste time on repetitive daily checkups. You must automate your routines. Set these up once and let them run — freeing you to focus entirely on shipping product.
-                        </p>
-
-                        <div class="space-y-4">
-                            <!-- Card 1: Codebase Routines -->
-                            <div class="bg-slate-950/80 border border-slate-800 p-4 sm:p-5 rounded-xl">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <i class="fa-solid fa-square-terminal text-emerald-400"></i>
-                                    <h4 class="font-bold text-sm text-emerald-400">1. Codebase Maintenance — Code Routines</h4>
-                                </div>
-                                <p class="text-xs text-slate-400 mb-3 leading-relaxed">In the <strong class="text-slate-300">Code</strong> section, configure a daily Routine that triggers via the CLI or automatically at midnight to keep your repo healthy.</p>
-                                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 font-mono space-y-1">
-                                    <div class="text-slate-500">// Daily — Vulnerability Audits & Linter</div>
-                                    <p class="leading-relaxed">"Check the repository for security vulnerabilities (`npm audit`), look for outdated non-breaking dependencies, run the linter to ensure formatting rules are met, and generate a summary markdown file detailing what needs updating."</p>
-                                </div>
-                            </div>
-
-                            <!-- Card 2: User Feedback -->
-                            <div class="bg-slate-950/80 border border-slate-800 p-4 sm:p-5 rounded-xl">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <i class="fa-solid fa-calendar-check text-amber-400"></i>
-                                    <h4 class="font-bold text-sm text-amber-400">2. User Feedback Synthesis — Cowork Scheduled</h4>
-                                </div>
-                                <p class="text-xs text-slate-400 mb-3 leading-relaxed">In the <strong class="text-slate-300">Cowork</strong> section, switch to the <strong class="text-slate-300">Scheduled</strong> tab and set up this recurring task to automatically surface user pain points every morning.</p>
-                                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 font-mono space-y-1">
-                                    <div class="text-slate-500">// Every day at 08:00 AM</div>
-                                    <p class="leading-relaxed">"Open Google Sheets/Airtable where my MVP's user feedback form is connected. Read the new entries from the last 24 hours. Connect to Chrome, search for any mentions of our app on Twitter/X, and compile a 'Daily Pulse Report' artifact highlighting critical bugs and feature requests."</p>
-                                </div>
-                            </div>
-
-                            <!-- Card 3: Competitor Watch -->
-                            <div class="bg-slate-950/80 border border-slate-800 p-4 sm:p-5 rounded-xl">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <i class="fa-solid fa-magnifying-glass-chart text-purple-400"></i>
-                                    <h4 class="font-bold text-sm text-purple-400">3. Competitor Pricing & Feature Watch — Cowork Scheduled</h4>
-                                </div>
-                                <p class="text-xs text-slate-400 mb-3 leading-relaxed">Stay ahead of the market without lifting a finger. Cowork checks your competitors every week and alerts you to any changes in their pricing or feature set.</p>
-                                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 font-mono space-y-1">
-                                    <div class="text-slate-500">// Every Monday morning</div>
-                                    <p class="leading-relaxed">"Go to our top 3 competitors' landing pages. Take a screenshot of their pricing tables. Compare them to the screenshots from last week. Write a summary detailing if they changed their pricing models or introduced new features."</p>
-                                </div>
-                            </div>
-                        </div>
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Code Routines</span>
+                    </div>
+                    <h4 class="font-bold text-sm text-white mb-2">Codebase Maintenance</h4>
+                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">Configure a daily Routine in the <strong class="text-slate-300">Code</strong> section that triggers via CLI or automatically at midnight to keep your repo healthy.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800/60 text-[11px] text-slate-400 font-mono">
+                        <div class="text-slate-500 mb-1">// Daily — audits &amp; linter</div>
+                        <p class="leading-relaxed text-slate-300">"Run npm audit, check outdated deps, run the linter, generate a summary markdown of what needs updating."</p>
                     </div>
                 </div>
 
+                <!-- Card 2: User Feedback -->
+                <div class="bg-slate-950/60 border border-amber-500/15 rounded-xl p-4 sm:p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-7 h-7 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-calendar-check text-amber-400 text-xs"></i>
+                        </div>
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Cowork Scheduled</span>
+                    </div>
+                    <h4 class="font-bold text-sm text-white mb-2">User Feedback Synthesis</h4>
+                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">In <strong class="text-slate-300">Cowork → Scheduled</strong>, set up a recurring task to surface user pain points every morning automatically.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800/60 text-[11px] text-slate-400 font-mono">
+                        <div class="text-slate-500 mb-1">// Every day at 08:00 AM</div>
+                        <p class="leading-relaxed text-slate-300">"Read new feedback entries from the last 24h, search Twitter/X for mentions, compile a Daily Pulse Report."</p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Competitor Watch -->
+                <div class="bg-slate-950/60 border border-purple-500/15 rounded-xl p-4 sm:p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-7 h-7 rounded-lg bg-purple-500/15 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-magnifying-glass-chart text-purple-400 text-xs"></i>
+                        </div>
+                        <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Cowork Scheduled</span>
+                    </div>
+                    <h4 class="font-bold text-sm text-white mb-2">Competitor Watch</h4>
+                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">Cowork checks your competitors every week and alerts you to pricing or feature changes — without lifting a finger.</p>
+                    <div class="bg-slate-900 p-3 rounded-lg border border-slate-800/60 text-[11px] text-slate-400 font-mono">
+                        <div class="text-slate-500 mb-1">// Every Monday morning</div>
+                        <p class="leading-relaxed text-slate-300">"Screenshot the top 3 competitors' pricing pages, compare to last week, summarise any changes."</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
         <!-- Developer Flow Summary -->
         <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur">
@@ -662,7 +649,6 @@ claude</pre>
             phase1:     { border: 'border-indigo-500',  mob: 'bg-indigo-500/15 border-indigo-500/40 text-indigo-300' },
             phase2:     { border: 'border-emerald-500', mob: 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300' },
             phase3:     { border: 'border-amber-500',   mob: 'bg-amber-500/15 border-amber-500/40 text-amber-300' },
-            automation: { border: 'border-purple-500',  mob: 'bg-purple-500/15 border-purple-500/40 text-purple-300' },
         };
 
         const allBorders = ['border-indigo-500', 'border-emerald-500', 'border-amber-500', 'border-purple-500'];
