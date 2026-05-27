@@ -1,0 +1,124 @@
+As a solo software developer spinning up an MVP (Minimum Viable Product), having access to the entire triad of Claude Desktop capabilities—**Chat, Cowork, and Code**—gives you a massive competitive advantage. You are effectively a "one-man army," using Claude as your product manager, backend engineer, QA, and operations team.
+
+To succeed, you must avoid the trap of treating these interfaces interchangeably. They use distinct execution models.
+
+Here is everything you need to know, framed through the **5Ws**, followed by a comprehensive **Step-by-Step Blueprint** to execute and automate your MVP.
+
+---
+
+## Part 1: The 5Ws of Your Claude Setup
+
+* **WHO is doing the work?** * **Chat:** Claude the **Strategist & Designer**. (Handles non-coding logic, UI flow mockups, and high-level architectural brainstorming).
+* **Code:** Claude the **Full-Stack Developer**. (Operates inside your terminal, directly writes code, runs your local test suites, and handles Git).
+* **Cowork:** Claude the **Operations Agent**. (Operates inside a sandboxed local VM to browse the web via Chrome, organize raw files, sync with API/SaaS tools, and manage data).
+
+
+* **WHAT are you building?** An MVP. Speed-to-market, lean codebases, clean folder structures, and automated operational tasks are your priorities.
+* **WHERE does the work happen?** * **Chat:** Inside the Claude Desktop GUI (cloud-sandboxed).
+* **Code:** Inside your local terminal (CLI) / IDE, mapped directly to your project root.
+* **Cowork:** Inside the Claude Desktop GUI, granted safe access to specific local folders and your Chrome browser.
+
+
+* **WHEN do you switch modes?** You move linearly from **Chat** (Ideation/Scoping) $\rightarrow$ **Code** (Building/Debugging) $\rightarrow$ **Cowork** (Testing, Populating Data, Launch Ops, & Automation).
+* **WHY use everything?** Doing an MVP alone usually stalls out because a solo developer spends 30% of their time writing code and 70% of their time on setup, debugging, documentation, population, and minor admin tasks. Utilizing all three surfaces slashes that 70% down to near zero.
+
+---
+
+## Part 2: The Step-by-Step Blueprint & Execution
+
+```
+[ PHASE 1: CHAT ]          [ PHASE 2: CODE ]          [ PHASE 3: COWORK ]
+ Brainstorm & Scope   -->   Terminal Execution   -->   Data Ops & Browser Automation
+ (PRD & Architecture)       (Write, Test, Git)         (Populate Database & Launch)
+
+```
+
+### Phase 1: Product Scoping & Architecture (Using Chat)
+
+Before touching a line of code, you must lock down the scope. MVPs fail when scope creep happens.
+
+* **Step 1.1:** Open **Chat $\rightarrow$ Projects**. Create a Project named `[MVP Name] - Strategy`.
+* **Step 1.2:** Upload your initial brain-dump or raw text notes into the Project Knowledge Base.
+* **Step 1.3:** Prompt Claude to act as a Senior Technical Product Manager:
+> *"Review my project notes. Generate a lean Product Requirement Document (PRD) and a step-by-step technical architecture plan for an MVP. Use simple tech stack choices (e.g., Next.js, Supabase, Tailwind). Output the PRD as an Artifact."*
+
+
+* **Step 1.4:** Refine the architecture in Chat until it's flawless. Once approved, use the **Customize** panel to set a Project memory instruction: *"Always adhere to the architectural guidelines outlined in the PRD artifact."*
+
+---
+
+### Phase 2: Rapid Codebase Generation (Using Claude Code)
+
+Now that your architectural blueprint is locked, hand it off to the terminal agent. Do not copy-paste code snippets from a chat box. Use the dedicated CLI agent.
+
+* **Step 2.1:** Open your terminal, navigate to your blank project folder, and spin up your base framework (e.g., `npx create-next-app@latest`).
+* **Step 2.2:** Launch the terminal agent in your project root:
+```bash
+claude
+
+```
+
+
+* **Step 2.3:** Provide your first instruction by referencing the PRD from Phase 1:
+> *"Initialize the project structure. Create the primary database schema helper files for Supabase and set up the main layout component according to our PRD guidelines."*
+
+
+* **Step 2.4 (The Self-Correction Loop):** When building features or fixing bugs, instruct Claude Code to execute tests automatically. It uses its internal exploration and verification loops to resolve its own errors:
+> *"Create the authentication page components. Once written, run `npm run test` or check for compilation errors, read the console logs, and fix any breaking changes before committing to git."*
+
+
+* **Step 2.5:** Use Claude Code to commit code seamlessly:
+> *"Review my recent changes, write a clean commit message following conventional commits, and commit it."*
+
+
+
+---
+
+### Phase 3: Launch Operations & Data Seeding (Using Cowork)
+
+Your app is built, but it’s empty. You need mock data, competitor analysis, or initial database seeding. This is where **Cowork** shines because it can control your browser and local files.
+
+* **Step 3.1:** Open **Cowork $\rightarrow$ Projects** in Claude Desktop. Create a project and point its file sandbox access directly to an external `/assets` or `/seeding` folder on your computer.
+* **Step 3.2:** Connect Claude to your browser using the Chrome extension link. Set the mode selector to **"Follow a plan"** or **"Ask before acting"** depending on your comfort level.
+* **Step 3.3:** Run a complex web-to-file extraction task to populate your MVP:
+> *"Navigate to [Competitor Website or Directory]. Find the top 20 trending items/data points. Extract their titles, descriptions, and image links. Compile this data into a clean `seed_data.json` file and save it directly into my shared local folder."*
+
+
+* **Step 3.4:** Use **Code** to push that JSON straight into your database, or let **Cowork** use your browser to log into your Supabase/Firebase dashboard and paste/upload it directly.
+
+---
+
+## Part 3: The Automation Blueprint (Routines & Scheduled Tasks)
+
+As a solo developer, you can't afford to waste time on repetitive daily checkups. You must automate your routines.
+
+### 1. Codebase Maintenance (Using Code Routines)
+
+In the **Code** section, you can configure **Routines** to run automated developer tasks.
+
+* **The Setup:** Define a daily Routine that triggers via the CLI or automatically at midnight.
+* **The Command:** > *"Check the repository for security vulnerabilities (`npm audit`), look for outdated non-breaking dependencies, run the linter to ensure formatting rules are met, and generate a summary markdown file detailing what needs updating."*
+
+### 2. Operational & Business Health Checks (Using Cowork Scheduled Tasks)
+
+In the **Cowork** section, switch to the **Scheduled** tab to set up recurring automation loops that run even when you aren't actively prompting.
+
+* **Automated User Feedback Synthesis:** * **Schedule:** Every morning at 8:00 AM.
+* **Task:** *"Open Google Sheets/Airtable where my MVP's user feedback form is connected. Read the new entries from the last 24 hours. Connect to Chrome, search for any mentions of our app on Twitter/X, and compile a 'Daily Pulse Report' artifact highlighting critical bugs and feature requests."*
+
+
+* **Competitor Pricing / Feature Watch:**
+* **Schedule:** Every Monday morning.
+* **Task:** *"Go to our top 3 competitors' landing pages. Take a screenshot of their pricing tables. Compare them to the screenshots from last week. Write a summary detailing if they changed their pricing models or introduced new features."*
+
+
+
+---
+
+## Summary of the Ideal Developer Flow
+
+To maximize efficiency, keep this simple mental model in mind:
+
+1. **Stuck on a feature concept or DB architecture?** Open a **Chat Project**.
+2. **Ready to write code, refactor a folder, or squash a compiler bug?** Run `claude` in your **Terminal**.
+3. **Need to scrape data, run browser testing, organize asset folders, or set up a daily reporting automation?** Toggle to **Cowork** in Claude Desktop.
