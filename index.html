@@ -4,122 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claude Desktop Triad Blueprint - MVP Solo Developer Guide</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome for professional layout icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
+
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0f172a; /* Slate 900 */
-            color: #f1f5f9; /* Slate 100 */
-        }
-        .code-font {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        /* Smooth transitions */
-        .tab-btn, .card-interactive {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f1f5f9; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        .tab-btn, .card-interactive, .mobile-tab-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Header / Banner Section -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-tr from-orange-500 to-amber-400 p-2 rounded-xl text-slate-950 shadow-md shadow-orange-500/20">
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center space-x-3 min-w-0">
+                <div class="bg-gradient-to-tr from-orange-500 to-amber-400 p-2 rounded-xl text-slate-950 shadow-md shadow-orange-500/20 shrink-0">
                     <i class="fa-solid fa-cubes-stacked text-xl"></i>
                 </div>
-                <div>
-                    <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Claude Desktop Triad</h1>
-                    <p class="text-xs text-slate-400 font-medium tracking-wide">MVP SOLO DEVELOPER ARCHITECTURE & BLUEPRINT</p>
+                <div class="min-w-0">
+                    <h1 class="text-base sm:text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent truncate">Claude Desktop Triad</h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400 font-medium tracking-wide hidden sm:block">MVP SOLO DEVELOPER ARCHITECTURE & BLUEPRINT</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-white text-sm font-medium flex items-center space-x-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:border-slate-600 transition">
-                    <i class="fa-brands fa-github text-base"></i>
-                    <span>GitHub Pages Deployment Ready</span>
-                </a>
-            </div>
+            <a href="https://github.com/aspect-study/claude-mpv-guide" target="_blank"
+               class="shrink-0 text-slate-400 hover:text-white text-sm font-medium flex items-center gap-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:border-slate-600 transition">
+                <i class="fa-brands fa-github text-base"></i>
+                <span class="hidden sm:inline">GitHub</span>
+            </a>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
         <!-- Quick Insight Stats Bar -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-slate-900 border border-slate-800/80 p-4 rounded-xl flex items-center space-x-4">
-                <div class="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
-                    <i class="fa-solid fa-brain text-xl"></i>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div class="bg-slate-900 border border-slate-800/80 p-3 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="p-2 sm:p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400 shrink-0">
+                    <i class="fa-solid fa-brain text-lg sm:text-xl"></i>
                 </div>
-                <div>
-                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider">Chat Surface</div>
-                    <div class="text-sm font-bold text-white">The Strategist & PM</div>
-                </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800/80 p-4 rounded-xl flex items-center space-x-4">
-                <div class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
-                    <i class="fa-solid fa-code text-xl"></i>
-                </div>
-                <div>
-                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider">Code Surface (CLI)</div>
-                    <div class="text-sm font-bold text-white">The Full-Stack Dev</div>
+                <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wider truncate">Chat Surface</div>
+                    <div class="text-xs sm:text-sm font-bold text-white">Strategist & PM</div>
                 </div>
             </div>
-            <div class="bg-slate-900 border border-slate-800/80 p-4 rounded-xl flex items-center space-x-4">
-                <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400">
-                    <i class="fa-solid fa-user-gear text-xl"></i>
+            <div class="bg-slate-900 border border-slate-800/80 p-3 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="p-2 sm:p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 shrink-0">
+                    <i class="fa-solid fa-code text-lg sm:text-xl"></i>
                 </div>
-                <div>
-                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider">Cowork Surface</div>
-                    <div class="text-sm font-bold text-white">The Operations Agent</div>
+                <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wider truncate">Code Surface</div>
+                    <div class="text-xs sm:text-sm font-bold text-white">Full-Stack Dev</div>
                 </div>
             </div>
-            <div class="bg-slate-900 border border-slate-800/80 p-4 rounded-xl flex items-center space-x-4">
-                <div class="p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-purple-400">
-                    <i class="fa-solid fa-bolt text-xl"></i>
+            <div class="bg-slate-900 border border-slate-800/80 p-3 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="p-2 sm:p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-400 shrink-0">
+                    <i class="fa-solid fa-user-gear text-lg sm:text-xl"></i>
                 </div>
-                <div>
-                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider">Solo Velocity Boost</div>
-                    <div class="text-sm font-bold text-white">10x Speed-To-Market</div>
+                <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wider truncate">Cowork Surface</div>
+                    <div class="text-xs sm:text-sm font-bold text-white">Operations Agent</div>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800/80 p-3 sm:p-4 rounded-xl flex items-center space-x-3">
+                <div class="p-2 sm:p-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-purple-400 shrink-0">
+                    <i class="fa-solid fa-bolt text-lg sm:text-xl"></i>
+                </div>
+                <div class="min-w-0">
+                    <div class="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wider truncate">Solo Velocity</div>
+                    <div class="text-xs sm:text-sm font-bold text-white">10x Speed-To-Market</div>
                 </div>
             </div>
         </div>
 
-        <!-- The 5Ws Interactive Framework Section -->
-        <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 mb-8 backdrop-blur">
-            <div class="flex items-center space-x-2 mb-6">
+        <!-- The 5Ws Framework -->
+        <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 backdrop-blur">
+            <div class="flex items-center space-x-2 mb-4 sm:mb-6">
                 <i class="fa-solid fa-circle-nodes text-orange-400 text-lg"></i>
-                <h2 class="text-xl font-bold tracking-tight text-white">The 5Ws Core Strategic Framework</h2>
+                <h2 class="text-lg sm:text-xl font-bold tracking-tight text-white">The 5Ws Core Strategic Framework</h2>
             </div>
-            
-            <!-- Interactive 5Ws Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                 <!-- WHO -->
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:border-indigo-500/40 card-interactive group">
+                <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl hover:border-indigo-500/40 card-interactive group">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-2 py-0.5 rounded">Who</span>
                         <i class="fa-solid fa-user-astronaut text-slate-500 group-hover:text-indigo-400 transition"></i>
@@ -128,53 +104,54 @@
                     <p class="text-xs text-slate-400 leading-relaxed">Claude delegates work seamlessly: Chat acts as Strategist, Code acts as Full-Stack Engineer, and Cowork behaves as Ops Agent.</p>
                 </div>
                 <!-- WHAT -->
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:border-emerald-500/40 card-interactive group">
+                <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl hover:border-emerald-500/40 card-interactive group">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded">What</span>
                         <i class="fa-solid fa-lightbulb text-slate-500 group-hover:text-emerald-400 transition"></i>
                     </div>
                     <h3 class="font-bold text-slate-200 text-sm mb-1">Building The MVP</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Focusing heavily on rapid execution, clean software architecture, automated data population, and launching with zero scope creep.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">Focusing on rapid execution, clean architecture, automated data population, and launching with zero scope creep.</p>
                 </div>
                 <!-- WHERE -->
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:border-amber-500/40 card-interactive group">
+                <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl hover:border-amber-500/40 card-interactive group">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded">Where</span>
                         <i class="fa-solid fa-map-location-dot text-slate-500 group-hover:text-amber-400 transition"></i>
                     </div>
                     <h3 class="font-bold text-slate-200 text-sm mb-1">The Execution Pods</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Chat is inside Cloud-Sandbox; Code directly modifies your local IDE/Terminal repositories; Cowork drives VM & Chrome.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">Chat runs in Cloud-Sandbox; Code modifies your local IDE/Terminal; Cowork drives your VM & Chrome.</p>
                 </div>
                 <!-- WHEN -->
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:border-purple-500/40 card-interactive group">
+                <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl hover:border-purple-500/40 card-interactive group">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-bold text-purple-400 uppercase tracking-widest bg-purple-500/10 px-2 py-0.5 rounded">When</span>
                         <i class="fa-solid fa-clock-rotate-left text-slate-500 group-hover:text-purple-400 transition"></i>
                     </div>
                     <h3 class="font-bold text-slate-200 text-sm mb-1">Linear Phase Swapping</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Move sequentially from Phase 1 (Chat/Scoping) &rarr; Phase 2 (Code/Building) &rarr; Phase 3 (Cowork/Automation Loops).</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">Move sequentially: Phase 1 (Chat/Scoping) &rarr; Phase 2 (Code/Building) &rarr; Phase 3 (Cowork/Automation).</p>
                 </div>
                 <!-- WHY -->
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl hover:border-cyan-500/40 card-interactive group">
+                <div class="bg-slate-900 border border-slate-800 p-4 sm:p-5 rounded-xl hover:border-cyan-500/40 card-interactive group sm:col-span-2 lg:col-span-1">
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-2 py-0.5 rounded">Why</span>
                         <i class="fa-solid fa-circle-question text-slate-500 group-hover:text-cyan-400 transition"></i>
                     </div>
                     <h3 class="font-bold text-slate-200 text-sm mb-1">Slashing Non-Code Admin</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Solo devs waste up to 70% of time setting up tooling, content, and pipelines. The Triad brings that massive friction close to zero.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">Solo devs waste up to 70% of time on tooling, content, and pipelines. The Triad brings that friction close to zero.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Main Workspace Interface (Tabbed System for Architectural Deep-Dives) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            <!-- Navigation Sidebar (Tab Controllers) -->
-            <div class="lg:col-span-4 flex flex-col space-y-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-2 mb-1">Blueprint Execution Blueprints</span>
-                
-                <button onclick="switchTab('phase1')" id="btn-phase1" class="tab-btn w-full text-left p-4 rounded-xl bg-slate-800 border-l-4 border-indigo-500 text-white shadow-lg flex items-start space-x-3 group">
-                    <div class="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg group-hover:bg-indigo-500/30 transition">
+        <!-- Main Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+            <!-- Desktop Sidebar (hidden on mobile) -->
+            <div class="hidden lg:flex lg:col-span-4 flex-col space-y-2">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-2 mb-1">Execution Blueprints</span>
+
+                <button onclick="switchTab('phase1')" id="btn-phase1"
+                    class="tab-btn w-full text-left p-4 rounded-xl bg-slate-800 border-l-4 border-indigo-500 text-white shadow-lg flex items-start space-x-3 group">
+                    <div class="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg transition">
                         <i class="fa-solid fa-comments text-base"></i>
                     </div>
                     <div>
@@ -184,59 +161,81 @@
                     </div>
                 </button>
 
-                <button onclick="switchTab('phase2')" id="btn-phase2" class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
+                <button onclick="switchTab('phase2')" id="btn-phase2"
+                    class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
                     <div class="p-2 bg-slate-800 text-slate-400 rounded-lg group-hover:bg-slate-700 transition">
                         <i class="fa-solid fa-terminal text-base"></i>
                     </div>
                     <div>
                         <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Phase 2</div>
                         <div class="font-bold text-sm text-slate-300">Rapid Codebase Generation</div>
-                        <p class="text-xs text-slate-500 mt-0.5">Using Claude Code CLI toolchains inside local IDE paths.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Using Claude Code CLI inside local IDE paths.</p>
                     </div>
                 </button>
 
-                <button onclick="switchTab('phase3')" id="btn-phase3" class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
+                <button onclick="switchTab('phase3')" id="btn-phase3"
+                    class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
                     <div class="p-2 bg-slate-800 text-slate-400 rounded-lg group-hover:bg-slate-700 transition">
                         <i class="fa-solid fa-arrow-pointer text-base"></i>
                     </div>
                     <div>
                         <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Phase 3</div>
                         <div class="font-bold text-sm text-slate-300">Launch Ops & Data Seeding</div>
-                        <p class="text-xs text-slate-500 mt-0.5">Using Cowork autonomous machine execution loops.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Using Cowork autonomous execution loops.</p>
                     </div>
                 </button>
 
-                <button onclick="switchTab('automation')" id="btn-automation" class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
+                <button onclick="switchTab('automation')" id="btn-automation"
+                    class="tab-btn w-full text-left p-4 rounded-xl bg-slate-900 hover:bg-slate-800/50 border-l-4 border-transparent text-slate-400 hover:text-slate-200 flex items-start space-x-3 group">
                     <div class="p-2 bg-slate-800 text-slate-400 rounded-lg group-hover:bg-slate-700 transition">
                         <i class="fa-solid fa-repeat text-base"></i>
                     </div>
                     <div>
-                        <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Continuous Automation</div>
+                        <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Continuous</div>
                         <div class="font-bold text-sm text-slate-300">Routines & Scheduled Actions</div>
                         <p class="text-xs text-slate-500 mt-0.5">Setting up self-running system checkups.</p>
                     </div>
                 </button>
             </div>
 
-            <!-- Content Windows Container -->
-            <div class="lg:col-span-8">
-                
+            <!-- Content Area -->
+            <div class="col-span-1 lg:col-span-8 space-y-4">
+
+                <!-- Mobile Tab Pills (visible only on mobile) -->
+                <div class="lg:hidden flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                    <button onclick="switchTab('phase1')" id="mob-btn-phase1"
+                        class="mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-semibold bg-indigo-500/15 border-indigo-500/40 text-indigo-300">
+                        <i class="fa-solid fa-comments"></i> Phase 1
+                    </button>
+                    <button onclick="switchTab('phase2')" id="mob-btn-phase2"
+                        class="mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-semibold">
+                        <i class="fa-solid fa-terminal"></i> Phase 2
+                    </button>
+                    <button onclick="switchTab('phase3')" id="mob-btn-phase3"
+                        class="mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-semibold">
+                        <i class="fa-solid fa-arrow-pointer"></i> Phase 3
+                    </button>
+                    <button onclick="switchTab('automation')" id="mob-btn-automation"
+                        class="mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-semibold">
+                        <i class="fa-solid fa-repeat"></i> Automation
+                    </button>
+                </div>
+
                 <!-- PHASE 1 WINDOW -->
                 <div id="content-phase1" class="tab-content block space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
-                            <div class="flex items-center space-x-3">
-                                <span class="bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-indigo-500/20">Chat Engine</span>
-                                <h3 class="text-lg font-bold text-white">Phase 1: Product Scoping & Blueprint Design</h3>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-indigo-500/20 shrink-0">Chat Engine</span>
+                                <h3 class="text-base sm:text-lg font-bold text-white">Phase 1: Product Scoping & Blueprint Design</h3>
                             </div>
-                            <span class="text-xs text-slate-500 font-mono">Isolated Sandbox</span>
+                            <span class="text-xs text-slate-500 font-mono shrink-0">Isolated Sandbox</span>
                         </div>
-                        
+
                         <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                            Before laying down database migrations or front-end components, establish structured safeguards against scope creep. Use the traditional Claude Chat interface as a world-class Technical Product Manager to assemble high-fidelity specifications.
+                            Before laying down database migrations or front-end components, establish structured safeguards against scope creep. Use the Claude Chat interface as a world-class Technical Product Manager to assemble high-fidelity specifications.
                         </p>
 
-                        <!-- Implementation steps -->
                         <div class="space-y-4">
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
@@ -248,18 +247,16 @@
 
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
-                                <div>
+                                <div class="min-w-0 w-full">
                                     <h4 class="text-sm font-semibold text-slate-200">The PRD Generation Prompt</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Execute the strategic prompt block. Instruct Claude to lock down tech stack architectural design options (e.g., TypeScript, Next.js, Tailwind, Supabase) and write it down as a persistent document artifact.</p>
-                                    
-                                    <!-- Code / Prompt Block Box -->
+                                    <p class="text-xs text-slate-400 mt-0.5">Instruct Claude to lock down tech stack choices (e.g., TypeScript, Next.js, Tailwind, Supabase) and write it as a persistent document artifact.</p>
                                     <div class="mt-2 relative">
-                                        <div class="absolute right-2 top-2">
+                                        <div class="absolute right-2 top-2 z-10">
                                             <button onclick="copyPrompt('prompt1')" class="text-slate-500 hover:text-slate-300 text-xs bg-slate-800 px-2 py-1 rounded border border-slate-700 transition">
                                                 <i class="fa-regular fa-copy"></i> Copy
                                             </button>
                                         </div>
-                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed pr-16" id="prompt1">"Review my project notes. Generate a lean Product Requirement Document (PRD) and a step-by-step technical architecture plan for an MVP. Use simple tech stack choices (e.g., Next.js, Supabase, Tailwind). Output the PRD as an Artifact."</pre>
+                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 pr-20 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed" id="prompt1">"Review my project notes. Generate a lean Product Requirement Document (PRD) and a step-by-step technical architecture plan for an MVP. Use simple tech stack choices (e.g., Next.js, Supabase, Tailwind). Output the PRD as an Artifact."</pre>
                                     </div>
                                 </div>
                             </div>
@@ -267,8 +264,8 @@
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
                                 <div>
-                                    <h4 class="text-sm font-semibold text-slate-200">Enforce Contextual Customizations</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Open the **Customize** panel configuration inside the project view. Add explicit system guardrails to maintain context constancy: <span class="italic text-slate-300">"Always adhere to the architectural guidelines outlined in the PRD artifact."</span></p>
+                                    <h4 class="text-sm font-semibold text-slate-200">Enforce Contextual Guardrails</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Open the <strong class="text-slate-300">Customize</strong> panel inside the project view. Add explicit system guardrails to maintain context: <em class="text-slate-300">"Always adhere to the architectural guidelines outlined in the PRD artifact."</em></p>
                                 </div>
                             </div>
                         </div>
@@ -277,58 +274,58 @@
 
                 <!-- PHASE 2 WINDOW -->
                 <div id="content-phase2" class="tab-content hidden space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
-                            <div class="flex items-center space-x-3">
-                                <span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-emerald-500/20">Claude Code CLI</span>
-                                <h3 class="text-lg font-bold text-white">Phase 2: Local Codebase Implementation Loop</h3>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-emerald-500/20 shrink-0">Claude Code CLI</span>
+                                <h3 class="text-base sm:text-lg font-bold text-white">Phase 2: Local Codebase Implementation</h3>
                             </div>
-                            <span class="text-xs text-slate-500 font-mono">Terminal Native</span>
+                            <span class="text-xs text-slate-500 font-mono shrink-0">Terminal Native</span>
                         </div>
-                        
+
                         <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                            Do not copy-paste code snippets from a floating web-browser page. Transition fully to your local operating system CLI workspace using the native terminal software agent toolchain to perform deep autonomous coding.
+                            Transition fully to your local CLI workspace using the native terminal agent toolchain. Avoid copy-pasting snippets — let Claude Code perform deep autonomous coding directly in your repository.
                         </p>
 
-                        <!-- Implementation steps -->
                         <div class="space-y-4">
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-slate-200">Spin Up Core Workspace & Boot Agent</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Create your fresh repo structure, then call the terminal agent directly inside your directory root path:</p>
-                                    <pre class="code-font text-xs text-emerald-400 bg-slate-950 p-2.5 rounded-lg mt-2 border border-slate-800/60">npx create-next-app@latest my-mvp-app && cd my-mvp-app&#10;claude</pre>
+                                <div class="min-w-0 w-full">
+                                    <h4 class="text-sm font-semibold text-slate-200">Spin Up Workspace & Boot Agent</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Create your repo structure, then invoke the terminal agent from your directory root:</p>
+                                    <pre class="code-font text-xs text-emerald-400 bg-slate-950 p-2.5 rounded-lg mt-2 border border-slate-800/60 overflow-x-auto">npx create-next-app@latest my-mvp-app && cd my-mvp-app
+claude</pre>
                                 </div>
                             </div>
 
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
-                                <div>
+                                <div class="min-w-0 w-full">
                                     <h4 class="text-sm font-semibold text-slate-200">Context Integration Prompt</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Feed the architectural logic derived in Phase 1 directly into the terminal engine execution loop:</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">Feed the Phase 1 architectural logic directly into the CLI execution loop:</p>
                                     <div class="mt-2 relative">
-                                        <div class="absolute right-2 top-2">
+                                        <div class="absolute right-2 top-2 z-10">
                                             <button onclick="copyPrompt('prompt2')" class="text-slate-500 hover:text-slate-300 text-xs bg-slate-800 px-2 py-1 rounded border border-slate-700 transition">
                                                 <i class="fa-regular fa-copy"></i> Copy
                                             </button>
                                         </div>
-                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed pr-16" id="prompt2">"Initialize the project structure. Create the primary database schema helper files for Supabase and set up the main layout component according to our PRD guidelines."</pre>
+                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 pr-20 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed" id="prompt2">"Initialize the project structure. Create the primary database schema helper files for Supabase and set up the main layout component according to our PRD guidelines."</pre>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-slate-200">The Self-Correction Testing Execution Loop</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Instruct Claude Code to execute its own test suite validation cycles, examine shell console output errors, and automatically self-heal codebase glitches before pushing commits:</p>
+                                <div class="min-w-0 w-full">
+                                    <h4 class="text-sm font-semibold text-slate-200">Self-Correction Testing Loop</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Instruct Claude Code to run its own test suite, read console errors, and auto-fix issues before committing:</p>
                                     <div class="mt-2 relative">
-                                        <div class="absolute right-2 top-2">
+                                        <div class="absolute right-2 top-2 z-10">
                                             <button onclick="copyPrompt('prompt3')" class="text-slate-500 hover:text-slate-300 text-xs bg-slate-800 px-2 py-1 rounded border border-slate-700 transition">
                                                 <i class="fa-regular fa-copy"></i> Copy
                                             </button>
                                         </div>
-                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed pr-16" id="prompt3">"Create the authentication page components. Once written, run `npm run test` or check for compilation errors, read the console logs, and fix any breaking changes before committing to git."</pre>
+                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 pr-20 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed" id="prompt3">"Create the authentication page components. Once written, run `npm run test` or check for compilation errors, read the console logs, and fix any breaking changes before committing to git."</pre>
                                     </div>
                                 </div>
                             </div>
@@ -338,26 +335,25 @@
 
                 <!-- PHASE 3 WINDOW -->
                 <div id="content-phase3" class="tab-content hidden space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
-                            <div class="flex items-center space-x-3">
-                                <span class="bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-amber-500/20">Cowork Agent Engine</span>
-                                <h3 class="text-lg font-bold text-white">Phase 3: Launch Operations & System Data Seeding</h3>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-amber-500/20 shrink-0">Cowork Agent</span>
+                                <h3 class="text-base sm:text-lg font-bold text-white">Phase 3: Launch Ops & Data Seeding</h3>
                             </div>
-                            <span class="text-xs text-slate-500 font-mono">Local VM & Browser Link</span>
+                            <span class="text-xs text-slate-500 font-mono shrink-0">VM & Browser</span>
                         </div>
-                        
+
                         <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                            Leverage Claude's autonomous multi-step execution agent to fill out empty applications. Grant Cowork secure parameters to interface natively with folders and browse specific paths over your desktop ecosystem.
+                            Leverage Claude's autonomous multi-step execution agent to populate empty applications. Grant Cowork secure access to local folders and specific browser paths within your desktop ecosystem.
                         </p>
 
-                        <!-- Implementation steps -->
                         <div class="space-y-4">
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
                                 <div>
                                     <h4 class="text-sm font-semibold text-slate-200">Establish the Local File Vault Bridge</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Open the **Cowork &rarr; Projects** GUI. Configure its file sandbox setting to aim strictly at a local directory containing asset folders, like <code class="code-font text-amber-300 bg-slate-950 px-1 rounded">/assets</code> or <code class="code-font text-amber-300 bg-slate-950 px-1 rounded">/seeding</code>.</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">Open the <strong class="text-slate-300">Cowork &rarr; Projects</strong> GUI. Configure its file sandbox to target a local directory containing asset folders like <code class="code-font text-amber-300 bg-slate-950 px-1 rounded">/assets</code> or <code class="code-font text-amber-300 bg-slate-950 px-1 rounded">/seeding</code>.</p>
                                 </div>
                             </div>
 
@@ -365,22 +361,22 @@
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
                                 <div>
                                     <h4 class="text-sm font-semibold text-slate-200">Connect Browser Agent Link</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Ensure your Chrome connection extension is functional. Set the mode behavior controller switch to **"Ask before acting"** or **"Follow a plan"** to manage access safeguards.</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">Ensure your Chrome extension is connected. Set the mode switch to <strong class="text-slate-300">"Ask before acting"</strong> or <strong class="text-slate-300">"Follow a plan"</strong> to manage access safeguards.</p>
                                 </div>
                             </div>
 
                             <div class="bg-slate-950/60 border border-slate-800/60 rounded-xl p-4 flex items-start space-x-3">
                                 <span class="bg-slate-800 text-slate-300 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-slate-200">Autonomous Bulk-Data Mining & Populating</h4>
-                                    <p class="text-xs text-slate-400 mt-0.5">Dispatch Cowork to assemble structural mock records, create system payloads, or script programmatic UI validations automatically while you grab a coffee:</p>
+                                <div class="min-w-0 w-full">
+                                    <h4 class="text-sm font-semibold text-slate-200">Autonomous Bulk Data Mining & Populating</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Dispatch Cowork to assemble mock records, create system payloads, or script UI validations while you step away:</p>
                                     <div class="mt-2 relative">
-                                        <div class="absolute right-2 top-2">
+                                        <div class="absolute right-2 top-2 z-10">
                                             <button onclick="copyPrompt('prompt4')" class="text-slate-500 hover:text-slate-300 text-xs bg-slate-800 px-2 py-1 rounded border border-slate-700 transition">
                                                 <i class="fa-regular fa-copy"></i> Copy
                                             </button>
                                         </div>
-                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed pr-16" id="prompt4">"Navigate to [Competitor Website or Directory]. Find the top 20 trending items/data points. Extract their titles, descriptions, and image links. Compile this data into a clean `seed_data.json` file and save it directly into my shared local folder."</pre>
+                                        <pre class="code-font text-xs text-slate-300 bg-slate-950 p-3 pr-20 rounded-lg overflow-x-auto border border-slate-800/60 leading-relaxed" id="prompt4">"Navigate to [Competitor Website or Directory]. Find the top 20 trending items/data points. Extract their titles, descriptions, and image links. Compile this data into a clean `seed_data.json` file and save it directly into my shared local folder."</pre>
                                     </div>
                                 </div>
                             </div>
@@ -390,41 +386,38 @@
 
                 <!-- AUTOMATION WINDOW -->
                 <div id="content-automation" class="tab-content hidden space-y-6">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
-                            <div class="flex items-center space-x-3">
-                                <span class="bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-purple-500/20">Routines & Schedules</span>
-                                <h3 class="text-lg font-bold text-white">Continuous Operational Automation</h3>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="bg-purple-500/10 text-purple-400 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-purple-500/20 shrink-0">Routines & Schedules</span>
+                                <h3 class="text-base sm:text-lg font-bold text-white">Continuous Operational Automation</h3>
                             </div>
-                            <span class="text-xs text-slate-500 font-mono">Hands-Free Execution</span>
+                            <span class="text-xs text-slate-500 font-mono shrink-0">Hands-Free</span>
                         </div>
-                        
+
                         <p class="text-sm text-slate-300 leading-relaxed mb-4">
-                            Delegate mundane maintenance and market inspection workflows entirely to backend processing loops so you can focus completely on primary product loops.
+                            Delegate mundane maintenance and market inspection workflows to backend processing loops so you can focus entirely on primary product work.
                         </p>
 
-                        <!-- Two Column Split for Routines vs Scheduled -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Code Routines -->
                             <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-xl">
                                 <div class="flex items-center space-x-2 text-emerald-400 font-bold text-sm mb-2">
                                     <i class="fa-solid fa-square-terminal"></i>
-                                    <h4>Codebase Native Routines</h4>
+                                    <h4>Codebase Routines</h4>
                                 </div>
-                                <p class="text-xs text-slate-400 mb-3">Programmatic code scripts configured directly inside Code engine settings blocks.</p>
+                                <p class="text-xs text-slate-400 mb-3">Programmatic scripts configured inside Code engine settings blocks.</p>
                                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 font-mono space-y-1">
                                     <div class="text-slate-500">// Run Vulnerability Audits & Linters</div>
                                     <p class="leading-relaxed">"Check the repository for security vulnerabilities (`npm audit`), look for outdated dependencies, run the linter, and generate a summary report markdown file."</p>
                                 </div>
                             </div>
 
-                            <!-- Cowork Scheduled -->
                             <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-xl">
                                 <div class="flex items-center space-x-2 text-amber-400 font-bold text-sm mb-2">
                                     <i class="fa-solid fa-calendar-check"></i>
-                                    <h4>Cowork Scheduled Automation</h4>
+                                    <h4>Cowork Scheduled Jobs</h4>
                                 </div>
-                                <p class="text-xs text-slate-400 mb-3">Cron-scheduled browser operations tracking feedback loops automatically.</p>
+                                <p class="text-xs text-slate-400 mb-3">Cron-scheduled browser operations that track feedback loops automatically.</p>
                                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-[11px] text-slate-300 font-mono space-y-1">
                                     <div class="text-slate-500">// Trigger Daily at 08:00 AM</div>
                                     <p class="leading-relaxed">"Open Google Sheets where user feedback forms connect. Read entries, check Twitter for app mentions, and compile a 'Daily Pulse Report' artifact."</p>
@@ -441,78 +434,70 @@
 
     <!-- Footer -->
     <footer class="mt-auto border-t border-slate-800 bg-slate-950 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-            <div>&copy; 2026 Claude Triad Blueprint Pod. Built with Anthropic Certified Execution Standard.</div>
-            <div class="mt-2 sm:mt-0 flex space-x-4">
-                <span class="hover:text-slate-400 transition"><i class="fa-solid fa-shield-halved"></i> MIT Sandbox License</span>
-                <span class="hover:text-slate-400 transition"><i class="fa-solid fa-code-branch"></i> Production Deployment Ready</span>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+            <div>&copy; 2026 Claude Triad Blueprint. Built with Anthropic Execution Standard.</div>
+            <div class="flex space-x-4">
+                <span><i class="fa-solid fa-shield-halved mr-1"></i>MIT License</span>
+                <span><i class="fa-solid fa-code-branch mr-1"></i>GitHub Pages Ready</span>
             </div>
         </div>
     </footer>
 
-    <!-- Interactive Scripting Engine -->
     <script>
+        const tabConfig = {
+            phase1:     { border: 'border-indigo-500',  mob: 'bg-indigo-500/15 border-indigo-500/40 text-indigo-300' },
+            phase2:     { border: 'border-emerald-500', mob: 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300' },
+            phase3:     { border: 'border-amber-500',   mob: 'bg-amber-500/15 border-amber-500/40 text-amber-300' },
+            automation: { border: 'border-purple-500',  mob: 'bg-purple-500/15 border-purple-500/40 text-purple-300' },
+        };
+
+        const allBorders = ['border-indigo-500', 'border-emerald-500', 'border-amber-500', 'border-purple-500'];
+
         function switchTab(phaseId) {
-            // Hide all tab contents
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.add('hidden'));
-            contents.forEach(content => content.classList.remove('block'));
-
-            // Show target content
-            const targetContent = document.getElementById('content-' + phaseId);
-            if (targetContent) {
-                targetContent.classList.remove('hidden');
-                targetContent.classList.add('block');
-            }
-
-            // Reset all tab button styles
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-slate-800', 'border-indigo-500', 'text-white', 'shadow-lg');
-                btn.classList.add('bg-slate-900', 'border-transparent', 'text-slate-400');
-                
-                // Reset internal typography elements 
-                const title = btn.querySelector('.font-bold');
-                if(title) {
-                    title.classList.remove('text-white');
-                    title.classList.add('text-slate-300');
-                }
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
             });
+            const target = document.getElementById('content-' + phaseId);
+            if (target) { target.classList.remove('hidden'); target.classList.add('block'); }
 
-            // Activate active style on current selected tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white', 'shadow-lg', ...allBorders);
+                btn.classList.add('bg-slate-900', 'border-transparent', 'text-slate-400');
+            });
             const activeBtn = document.getElementById('btn-' + phaseId);
             if (activeBtn) {
                 activeBtn.classList.remove('bg-slate-900', 'border-transparent', 'text-slate-400');
-                activeBtn.classList.add('bg-slate-800', 'border-indigo-500', 'text-white', 'shadow-lg');
-                
-                const title = activeBtn.querySelector('.font-bold');
-                if(title) {
-                    title.classList.remove('text-slate-300');
-                    title.classList.add('text-white');
-                }
+                activeBtn.classList.add('bg-slate-800', tabConfig[phaseId].border, 'text-white', 'shadow-lg');
+            }
+
+            Object.keys(tabConfig).forEach(id => {
+                const mobBtn = document.getElementById('mob-btn-' + id);
+                if (!mobBtn) return;
+                mobBtn.className = 'mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs font-semibold';
+            });
+            const activeMobBtn = document.getElementById('mob-btn-' + phaseId);
+            if (activeMobBtn) {
+                activeMobBtn.className = `mobile-tab-btn shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-semibold ${tabConfig[phaseId].mob}`;
             }
         }
 
         function copyPrompt(elementId) {
             const codeBlock = document.getElementById(elementId);
             if (!codeBlock) return;
-            
-            // Extract code text contents clean
-            const textToCopy = codeBlock.innerText.replace(/^"|"$/g, ''); // strip outer quotes if present
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                // Flash success alert styling momentarily
-                const button = codeBlock.previousElementSibling.querySelector('button');
-                const originalHTML = button.innerHTML;
-                button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
-                button.classList.add('border-emerald-500/30', 'bg-emerald-950/20');
-                
+            const btn = codeBlock.closest('.relative').querySelector('button');
+            const original = btn.innerHTML;
+
+            navigator.clipboard.writeText(codeBlock.innerText.trim()).then(() => {
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
+                btn.classList.add('border-emerald-500/30', 'bg-emerald-950/20');
                 setTimeout(() => {
-                    button.innerHTML = originalHTML;
-                    button.classList.remove('border-emerald-500/30', 'bg-emerald-950/20');
+                    btn.innerHTML = original;
+                    btn.classList.remove('border-emerald-500/30', 'bg-emerald-950/20');
                 }, 2000);
-            }).catch(err => {
-                console.error('Failed to write clipboard data logs: ', err);
+            }).catch(() => {
+                btn.innerHTML = '<i class="fa-solid fa-xmark text-red-400"></i> Failed';
+                setTimeout(() => { btn.innerHTML = original; }, 2000);
             });
         }
     </script>
