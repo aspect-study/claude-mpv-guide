@@ -1,0 +1,17 @@
+# Claude Code configuration — keep local only
+CLAUDE.md
+.claude/
+
+# Project knowledge and learnings — keep local only
+memory/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories
+.idea/
+.vscode/
+*.suo
+*.user
