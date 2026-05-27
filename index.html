@@ -20,6 +20,13 @@
         .tab-btn, .card-interactive, .mobile-tab-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Phase-flow arrows: right on desktop, down on mobile */
+        .arrow-h { display: none; }
+        .arrow-v { display: block; }
+        @media (min-width: 640px) {
+            .arrow-h { display: block; }
+            .arrow-v { display: none; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
@@ -200,8 +207,8 @@
                 </div>
                 <!-- Arrow -->
                 <div class="flex items-center justify-center text-slate-600 shrink-0">
-                    <i class="fa-solid fa-arrow-right hidden sm:block text-lg"></i>
-                    <i class="fa-solid fa-arrow-down block sm:hidden text-lg"></i>
+                    <i class="fa-solid fa-arrow-right arrow-h text-lg"></i>
+                    <i class="fa-solid fa-arrow-down arrow-v text-lg"></i>
                 </div>
                 <!-- Phase 2 -->
                 <div class="flex-1 bg-emerald-500/10 border border-emerald-500/25 rounded-xl p-4">
@@ -211,8 +218,8 @@
                 </div>
                 <!-- Arrow -->
                 <div class="flex items-center justify-center text-slate-600 shrink-0">
-                    <i class="fa-solid fa-arrow-right hidden sm:block text-lg"></i>
-                    <i class="fa-solid fa-arrow-down block sm:hidden text-lg"></i>
+                    <i class="fa-solid fa-arrow-right arrow-h text-lg"></i>
+                    <i class="fa-solid fa-arrow-down arrow-v text-lg"></i>
                 </div>
                 <!-- Phase 3 -->
                 <div class="flex-1 bg-amber-500/10 border border-amber-500/25 rounded-xl p-4">
