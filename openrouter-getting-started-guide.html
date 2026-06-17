@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <style>
-    /* ── Design Tokens ── */
+    /* ── Design Tokens — Dark (default) ── */
     :root {
       --bg-base:       #0d1117;
       --bg-card:       #161b22;
@@ -31,6 +31,42 @@
       --content-max: 800px;
       --radius: 6px;
       --radius-lg: 10px;
+    }
+
+    /* ── Design Tokens — Light ── */
+    [data-theme="light"] {
+      --bg-base:       #ffffff;
+      --bg-card:       #f6f8fa;
+      --bg-elevated:   #eaeef2;
+      --bg-hover:      #dde3ea;
+      --border:        #d0d7de;
+      --border-subtle: #eaeef2;
+      --text-primary:  #1f2328;
+      --text-secondary:#636c76;
+      --text-muted:    #9198a1;
+      --accent-blue:   #0969da;
+      --accent-purple: #8250df;
+      --accent-green:  #1a7f37;
+      --accent-orange: #9a6700;
+      --accent-red:    #d1242f;
+    }
+
+    /* ── Theme toggle button ── */
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 5px 8px;
+      font-size: 14px;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      line-height: 1;
+    }
+    #theme-toggle:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+      border-color: var(--accent-blue);
     }
 
     /* ── Reset ── */
@@ -774,14 +810,19 @@
   <!-- ── Sidebar ── -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">
-          <i class="fa-solid fa-route" style="color:#fff;font-size:14px;"></i>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">
+            <i class="fa-solid fa-route" style="color:#fff;font-size:14px;"></i>
+          </div>
+          <div>
+            <div class="sidebar-logo-text">OpenRouter</div>
+            <div class="sidebar-subtitle">Getting Started Guide</div>
+          </div>
         </div>
-        <div>
-          <div class="sidebar-logo-text">OpenRouter</div>
-          <div class="sidebar-subtitle">Getting Started Guide</div>
-        </div>
+        <button id="theme-toggle" title="Toggle light/dark mode">
+          <i class="fa-solid fa-sun"></i>
+        </button>
       </div>
     </div>
 
@@ -1649,6 +1690,22 @@ print(completion.choices[0].message.content)</code></pre>
   // ── Pretext CDN (vendor available but using module import for simplicity)
   // import { prepare, layout } from 'https://esm.sh/@chenglou/pretext';
   // Pretext layout is handled via CSS for this documentation page.
+
+  // ── Theme toggle ──
+  const themeToggle = document.getElementById('theme-toggle');
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.dataset.theme = savedTheme;
+  themeToggle.innerHTML = savedTheme === 'light'
+    ? '<i class="fa-solid fa-moon"></i>'
+    : '<i class="fa-solid fa-sun"></i>';
+  themeToggle.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    themeToggle.innerHTML = next === 'light'
+      ? '<i class="fa-solid fa-moon"></i>'
+      : '<i class="fa-solid fa-sun"></i>';
+  });
 
   // ── Scrollspy ──
   const tocLinks = document.querySelectorAll('.toc-link[data-target]');
