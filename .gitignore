@@ -5,6 +5,9 @@ CLAUDE.md
 # Project knowledge and learnings — keep local only
 memory/
 
+# Source documents — internal use only
+guide document/
+
 # OS junk
 .DS_Store
 Thumbs.db

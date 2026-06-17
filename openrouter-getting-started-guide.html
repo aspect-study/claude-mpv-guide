@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenRouter — Getting Started Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --bg-base:       #0d1117;
+      --bg-card:       #161b22;
+      --bg-elevated:   #1c2128;
+      --bg-hover:      #21262d;
+      --border:        #30363d;
+      --border-subtle: #21262d;
+      --text-primary:  #e6edf3;
+      --text-secondary:#8b949e;
+      --text-muted:    #6e7681;
+      --accent-blue:   #58a6ff;
+      --accent-purple: #bc8cff;
+      --accent-green:  #3fb950;
+      --accent-orange: #d29922;
+      --accent-red:    #f85149;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --sidebar-w: 280px;
+      --content-max: 800px;
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      background: var(--bg-base);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .sidebar-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .sidebar-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .sidebar-logo-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+    .sidebar-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sidebar-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 12px;
+      pointer-events: none;
+    }
+    #sidebar-search {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 7px 10px 7px 30px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #sidebar-search::placeholder { color: var(--text-muted); }
+    #sidebar-search:focus { border-color: var(--accent-blue); }
+
+    .sidebar-toc {
+      padding: 12px 0 20px;
+      flex: 1;
+    }
+    .toc-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      padding: 12px 20px 4px;
+    }
+    .toc-link {
+      display: block;
+      padding: 6px 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+      border-left: 2px solid transparent;
+      line-height: 1.4;
+    }
+    .toc-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+      text-decoration: none;
+    }
+    .toc-link.active {
+      color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.08);
+      border-left-color: var(--accent-blue);
+    }
+    .toc-link.sub {
+      padding-left: 32px;
+      font-size: 12px;
+    }
+    .toc-link.hidden { display: none; }
+
+    /* ── Main Content ── */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 0 40px 80px;
+      max-width: calc(var(--content-max) + 80px);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 56px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.1);
+      border: 1px solid rgba(88, 166, 255, 0.2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .hero h1 span { color: var(--accent-blue); }
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 580px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 5px 10px;
+    }
+    .hero-badge i { color: var(--accent-green); font-size: 11px; }
+
+    /* ── Sections ── */
+    .doc-section {
+      margin-bottom: 56px;
+      scroll-margin-top: 24px;
+    }
+    .section-number {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      background: rgba(88, 166, 255, 0.1);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+    }
+    .doc-section > h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+    .doc-section p {
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+    .doc-section p:last-child { margin-bottom: 0; }
+
+    .subsection {
+      margin-top: 36px;
+      scroll-margin-top: 24px;
+    }
+    .subsection h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subsection h3::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 16px;
+      background: var(--accent-blue);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .subsection p {
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+
+    /* ── Section divider ── */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 48px;
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-left: 3px solid;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .callout-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .callout-body { flex: 1; min-width: 0; }
+    .callout-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .callout-text {
+      font-size: 13.5px;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .callout.tip {
+      background: rgba(63, 185, 80, 0.07);
+      border-color: var(--accent-green);
+    }
+    .callout.tip .callout-icon { color: var(--accent-green); }
+    .callout.tip .callout-title { color: var(--accent-green); }
+    .callout.tip .callout-text { color: #aad8b0; }
+    .callout.warning {
+      background: rgba(210, 153, 34, 0.08);
+      border-color: var(--accent-orange);
+    }
+    .callout.warning .callout-icon { color: var(--accent-orange); }
+    .callout.warning .callout-title { color: var(--accent-orange); }
+    .callout.warning .callout-text { color: #c8ab70; }
+    .callout.note {
+      background: rgba(88, 166, 255, 0.07);
+      border-color: var(--accent-blue);
+    }
+    .callout.note .callout-icon { color: var(--accent-blue); }
+    .callout.note .callout-title { color: var(--accent-blue); }
+    .callout.note .callout-text { color: #90bde0; }
+    .callout.danger {
+      background: rgba(248, 81, 73, 0.07);
+      border-color: var(--accent-red);
+    }
+    .callout.danger .callout-icon { color: var(--accent-red); }
+    .callout.danger .callout-title { color: var(--accent-red); }
+    .callout.danger .callout-text { color: #d98b87; }
+
+    /* ── Code Blocks ── */
+    .code-block {
+      position: relative;
+      margin: 16px 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-lang {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+    }
+    .copy-btn:hover { color: var(--text-primary); border-color: var(--accent-blue); }
+    .copy-btn.copied { color: var(--accent-green); border-color: var(--accent-green); }
+    .code-block pre {
+      margin: 0;
+      padding: 16px 18px;
+      background: var(--bg-card);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e6edf3;
+    }
+    .code-block code { font-family: inherit; }
+
+    /* ── Inline code ── */
+    code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--accent-purple);
+    }
+
+    /* ── Tables ── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    thead tr {
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 14px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-subtle);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    tr:first-child td { border-top: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    td:first-child { color: var(--text-primary); font-weight: 500; }
+    td code { font-size: 11.5px; }
+
+    /* ── Ordered / Unordered Lists ── */
+    .doc-list {
+      padding-left: 20px;
+      margin: 10px 0 14px;
+      color: var(--text-secondary);
+    }
+    .doc-list li {
+      margin-bottom: 6px;
+      line-height: 1.65;
+    }
+    .doc-list li::marker { color: var(--accent-blue); }
+
+    /* ── Steps ── */
+    .steps {
+      margin: 16px 0;
+      counter-reset: step;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 18px;
+      align-items: flex-start;
+    }
+    .step-num {
+      counter-increment: step;
+      width: 28px;
+      height: 28px;
+      background: rgba(88, 166, 255, 0.12);
+      border: 1px solid rgba(88, 166, 255, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+    }
+    .step-num::before { content: counter(step); }
+    .step-body {
+      flex: 1;
+      padding-top: 4px;
+    }
+    .step-body strong {
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+    .step-body p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Checklist ── */
+    .checklist {
+      margin: 16px 0;
+      list-style: none;
+      padding: 0;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 6px;
+      transition: background 0.15s;
+    }
+    .checklist li:hover { background: var(--bg-elevated); }
+    .check-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .checklist-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      background: transparent;
+    }
+    .checklist li.checked .checklist-checkbox {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+    }
+    .checklist li.checked .checklist-checkbox::after {
+      content: '✓';
+      color: #000;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .checklist li.checked .check-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+    .check-text {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    /* ── Key Format Block ── */
+    .key-format {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .key-format-icon {
+      color: var(--accent-orange);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .key-format-code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-green);
+      white-space: nowrap;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    /* ── Back to Top ── */
+    #back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s;
+      z-index: 100;
+      font-size: 14px;
+    }
+    #back-to-top.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    #back-to-top:hover {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border-color: var(--accent-blue);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-left {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .footer-links a:hover { color: var(--accent-blue); }
+
+    /* ── Kbd ── */
+    kbd {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Feature Grid ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      transition: border-color 0.15s;
+    }
+    .feature-card:hover { border-color: rgba(88, 166, 255, 0.4); }
+    .feature-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .feature-card-title i { color: var(--accent-blue); font-size: 12px; }
+    .feature-card-desc {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ── Mobile Hamburger ── */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 200;
+      width: 38px;
+      height: 38px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 150;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 160;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .mobile-toggle { display: flex; }
+      .content { padding: 60px 20px 60px; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 24px; }
+      .content { padding: 60px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Toggle -->
+<button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle sidebar">
+  <i class="fa-solid fa-bars"></i>
+</button>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-route" style="color:#fff;font-size:14px;"></i>
+        </div>
+        <div>
+          <div class="sidebar-logo-text">OpenRouter</div>
+          <div class="sidebar-subtitle">Getting Started Guide</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-search">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="sidebar-search" type="text" placeholder="Filter sections…" autocomplete="off" />
+      </div>
+    </div>
+
+    <nav class="sidebar-toc" id="toc">
+      <div class="toc-section-label">Overview</div>
+      <a class="toc-link" data-target="section-1">1. What is OpenRouter?</a>
+      <a class="toc-link sub" data-target="s1-1">1.1 Why We're Using It</a>
+      <a class="toc-link sub" data-target="s1-2">1.2 How It Works</a>
+
+      <div class="toc-section-label">Setup</div>
+      <a class="toc-link" data-target="section-2">2. Creating Your Account</a>
+      <a class="toc-link sub" data-target="s2-1">2.1 Registration</a>
+      <a class="toc-link sub" data-target="s2-2">2.2 Dashboard</a>
+      <a class="toc-link" data-target="section-3">3. Generating an API Key</a>
+      <a class="toc-link sub" data-target="s3-1">3.1 How to Generate</a>
+      <a class="toc-link sub" data-target="s3-2">3.2 Key Format</a>
+      <a class="toc-link sub" data-target="s3-3">3.3 Key Rotation</a>
+      <a class="toc-link" data-target="section-4">4. Internal Platform</a>
+      <a class="toc-link sub" data-target="s4-1">4.1 Registration Flow</a>
+      <a class="toc-link sub" data-target="s4-2">4.2 Platform Features</a>
+
+      <div class="toc-section-label">Usage</div>
+      <a class="toc-link" data-target="section-5">5. Using the Playground</a>
+      <a class="toc-link sub" data-target="s5-1">5.1 Selecting a Model</a>
+      <a class="toc-link sub" data-target="s5-2">5.2 Model Selection Guide</a>
+      <a class="toc-link sub" data-target="s5-3">5.3 Conversations</a>
+      <a class="toc-link sub" data-target="s5-4">5.4 Token Display</a>
+      <a class="toc-link sub" data-target="s5-5">5.5 Daily Limits</a>
+      <a class="toc-link" data-target="section-6">6. Token Expenditure</a>
+      <a class="toc-link sub" data-target="s6-1">6.1 How Tokens Work</a>
+      <a class="toc-link sub" data-target="s6-2">6.2 Tips to Reduce Usage</a>
+      <a class="toc-link sub" data-target="s6-3">6.3 Rate Limits by Model</a>
+
+      <div class="toc-section-label">Reference</div>
+      <a class="toc-link" data-target="section-7">7. Managing Settings</a>
+      <a class="toc-link" data-target="section-8">8. Troubleshooting</a>
+      <a class="toc-link" data-target="section-9">9. Quick Reference</a>
+    </nav>
+  </nav>
+
+  <!-- ── Main Content ── -->
+  <main class="content">
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-eyebrow">
+        <i class="fa-solid fa-circle-dot" style="font-size:8px;"></i>
+        Internal Team Documentation
+      </div>
+      <h1>OpenRouter <span>Getting Started</span> Guide</h1>
+      <p class="hero-desc">
+        A team orientation manual covering account creation, API key configuration, free model usage, and token expenditure management.
+      </p>
+      <div class="hero-meta">
+        <span class="hero-badge">
+          <i class="fa-solid fa-circle-check"></i>
+          For Internal Team Use Only
+        </span>
+        <span class="hero-badge">
+          <i class="fa-regular fa-calendar" style="color:var(--text-muted);font-size:11px;"></i>
+          Prepared by Oliver &nbsp;·&nbsp; June 2026
+        </span>
+        <span class="hero-badge">
+          <i class="fa-solid fa-layer-group" style="color:var(--accent-purple);font-size:11px;"></i>
+          9 Sections
+        </span>
+      </div>
+    </header>
+
+    <!-- ── Section 1 ── -->
+    <section class="doc-section" id="section-1">
+      <div class="section-number">01</div>
+      <h2>What is OpenRouter?</h2>
+      <p>
+        OpenRouter is a unified API gateway that gives you access to dozens of AI language models from different
+        providers — Meta, NVIDIA, OpenAI, Mistral, Google, and others — through a single endpoint and a single API key.
+      </p>
+      <p>
+        Instead of maintaining separate accounts and API integrations for each AI provider, you route all your
+        requests through OpenRouter. It handles model routing, load balancing, and billing on your behalf.
+      </p>
+
+      <div class="subsection" id="s1-1">
+        <h3>1.1 Why We're Using It</h3>
+        <p>
+          The primary motivation is <strong style="color:var(--text-primary);">token cost control</strong>. Our team's AI usage was previously
+          driven by individual API subscriptions. OpenRouter consolidates this and — critically — provides access to
+          a curated set of high-quality models on a completely free tier, with no credit card required.
+        </p>
+        <div class="callout tip">
+          <div class="callout-icon"><i class="fa-solid fa-star"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Key Benefit</div>
+            <p class="callout-text">
+              OpenRouter's free tier includes 24+ production-quality LLM models from top providers at zero cost.
+              These are real models — Llama 3.3 70B, NVIDIA Nemotron, Mistral, Kimi, and others — not stripped-down demos.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection" id="s1-2">
+        <h3>1.2 How It Works</h3>
+        <p>
+          You create a free OpenRouter account, generate an API key, and use that key in your API calls or in our
+          internal platform. OpenRouter routes your request to the model you specify and returns the response.
+          You never need a separate key per model.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>What It Means</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>API Key</td>
+                <td>Your personal OpenRouter key — starts with <code>sk-or-v1-</code></td>
+              </tr>
+              <tr>
+                <td>Model ID</td>
+                <td>The identifier for a specific AI model, e.g. <code>meta-llama/llama-3.3-70b-instruct:free</code></td>
+              </tr>
+              <tr>
+                <td>Free Tier</td>
+                <td>Models marked <code>:free</code> — no charges, no card required</td>
+              </tr>
+              <tr>
+                <td>Rate Limit</td>
+                <td>Max requests per minute per model on the free tier (varies: 5–30 rpm)</td>
+              </tr>
+              <tr>
+                <td>Context Window</td>
+                <td>How much text a model can read + write in one request (32K to 200K tokens)</td>
+              </tr>
+              <tr>
+                <td>Tokens</td>
+                <td>The unit of text AI processes — roughly 1 token ≈ 0.75 words</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 2 ── -->
+    <section class="doc-section" id="section-2">
+      <div class="section-number">02</div>
+      <h2>Creating Your OpenRouter Account</h2>
+      <p>
+        Account creation takes under 2 minutes. No credit card is required for the free tier.
+      </p>
+
+      <div class="subsection" id="s2-1">
+        <h3>2.1 Step-by-Step Registration</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Open OpenRouter</strong>
+              <p>Open your browser and navigate to <a href="https://openrouter.ai" target="_blank">https://openrouter.ai</a></p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Click Sign Up</strong>
+              <p>Click <strong style="color:var(--text-primary);">Sign Up</strong> in the top right corner.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Choose registration method</strong>
+              <p>You can register using: Google account (recommended for speed), GitHub account, or Email and password.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Land on the dashboard</strong>
+              <p>After signing in, you will land on the OpenRouter dashboard. No billing setup is needed — the free tier is activated automatically.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="callout-icon"><i class="fa-brands fa-google"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Tip — Use Google Sign-In</div>
+            <p class="callout-text">
+              Google sign-in is the fastest path. No password to remember, and your account is immediately active.
+              If your organization uses Google Workspace, this also ties your account to your work identity.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection" id="s2-2">
+        <h3>2.2 Navigating the Dashboard</h3>
+        <p>
+          Once logged in, you will see the main OpenRouter dashboard. The key areas are:
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Dashboard Area</th>
+                <th>What It Does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Models</td>
+                <td>Browse all available models, including free-tier ones</td>
+              </tr>
+              <tr>
+                <td>Keys</td>
+                <td>Create, view, and revoke your API keys</td>
+              </tr>
+              <tr>
+                <td>Usage</td>
+                <td>Monitor your token consumption and request counts</td>
+              </tr>
+              <tr>
+                <td>Settings</td>
+                <td>Account preferences, billing (optional), and rate limits</td>
+              </tr>
+              <tr>
+                <td>API Reference</td>
+                <td>Official documentation for making API calls directly</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 3 ── -->
+    <section class="doc-section" id="section-3">
+      <div class="section-number">03</div>
+      <h2>Generating Your API Key</h2>
+      <p>
+        Your API key is the credential that authenticates you to OpenRouter. It is used in every API call you
+        or our platform makes on your behalf.
+      </p>
+
+      <div class="subsection" id="s3-1">
+        <h3>3.1 How to Generate a Key</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Navigate to Keys</strong>
+              <p>From the dashboard, click your profile icon or navigate to the <strong style="color:var(--text-primary);">Keys</strong> section in the left sidebar.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Create Key</strong>
+              <p>Click <strong style="color:var(--text-primary);">Create Key</strong>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Give it a name</strong>
+              <p>Give it a descriptive name, e.g. <code>"Team Platform Key — June 2026"</code>. Leave the credit limit blank (not applicable for free tier use).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Copy immediately</strong>
+              <p>Click Create and copy the key immediately. <strong style="color:var(--accent-orange);">It will be shown only once.</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout danger">
+          <div class="callout-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Security Notice — Treat Your Key Like a Password</div>
+            <p class="callout-text">
+              Your API key grants full access to your OpenRouter account. Never share it in chat, email, or commit it
+              to a repository. If you suspect it was exposed, revoke it immediately from the Keys page and generate a new one.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection" id="s3-2">
+        <h3>3.2 Key Format</h3>
+        <p>OpenRouter API keys always follow this format:</p>
+        <div class="key-format">
+          <span class="key-format-icon"><i class="fa-solid fa-key"></i></span>
+          <code class="key-format-code">sk-or-v1-<span style="opacity:0.5;">&lt;64-character-token&gt;</span></code>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-secondary);margin-top:8px;">
+          If your key does not start with <code>sk-or-v1-</code>, it was not generated correctly. Return to the Keys
+          page and try again.
+        </p>
+      </div>
+
+      <div class="subsection" id="s3-3">
+        <h3>3.3 Key Rotation Best Practice</h3>
+        <p>Rotate (replace) your key if any of the following occur:</p>
+        <ul class="doc-list">
+          <li>You accidentally exposed it — in a message, screenshot, or code commit.</li>
+          <li>A team member who had access to it leaves.</li>
+          <li>You notice unexpected usage spikes in your Usage dashboard.</li>
+        </ul>
+        <div class="callout note">
+          <div class="callout-icon"><i class="fa-solid fa-rotate"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Rotation Order Matters</div>
+            <p class="callout-text">
+              To rotate: generate a new key first, update it in the platform, then revoke the old one.
+              <strong style="color:var(--text-primary);">Never revoke first</strong> — that will cause downtime.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 4 ── -->
+    <section class="doc-section" id="section-4">
+      <div class="section-number">04</div>
+      <h2>Registering on Our Internal Platform</h2>
+      <p>
+        Our team uses an internal AI gateway built on top of OpenRouter. You do not call OpenRouter directly —
+        you register on our platform, enter your OpenRouter key, and the platform handles all API routing for you.
+      </p>
+
+      <div class="subsection" id="s4-1">
+        <h3>4.1 Platform Registration Flow</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Open the platform</strong>
+              <p>Navigate to the platform URL shared by the admin.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Register</strong>
+              <p>Click <strong style="color:var(--text-primary);">Register</strong> and enter your work email and a password.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Log in</strong>
+              <p>Log in with your credentials. You will be redirected to the Settings page automatically.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Open the API Key tab</strong>
+              <p>On the Settings page, open the <strong style="color:var(--text-primary);">API Key</strong> tab.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Paste your key and save</strong>
+              <p>Paste your OpenRouter API key (<code>sk-or-v1-...</code>) into the key field and click <strong style="color:var(--text-primary);">Save</strong>. The platform validates the key live against OpenRouter before storing it.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num"></div>
+            <div class="step-body">
+              <strong>Playground unlocked</strong>
+              <p>Once validated, the Playground (chat interface) is unlocked for you.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout note">
+          <div class="callout-icon"><i class="fa-solid fa-lock"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">What Happens to Your Key</div>
+            <p class="callout-text">
+              Your key is encrypted using AES-GCM before being stored. The platform never exposes the raw key value
+              again — not in the UI, not in admin views, not in API responses. Admins can only see whether you have
+              a key configured (yes/no), not the key itself.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection" id="s4-2">
+        <h3>4.2 What the Platform Gives You</h3>
+        <p>Once your key is set, you have access to:</p>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-card-title"><i class="fa-solid fa-comments"></i> AI Playground</div>
+            <div class="feature-card-desc">A full chat interface with conversation history, model switching, and token usage display.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title"><i class="fa-solid fa-robot"></i> 24+ Free Models</div>
+            <div class="feature-card-desc">All OpenRouter free-tier models curated and labeled with use cases and limitations.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title"><i class="fa-solid fa-clock-rotate-left"></i> Conversation History</div>
+            <div class="feature-card-desc">All your chats are persisted per-conversation in the platform — nothing is lost.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title"><i class="fa-solid fa-chart-bar"></i> Token Usage Tracking</div>
+            <div class="feature-card-desc">Real token counts shown after every response — not estimated, pulled from OpenRouter directly.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title"><i class="fa-solid fa-gauge-high"></i> Daily Usage Limits</div>
+            <div class="feature-card-desc">Admin-configured per-model daily caps to prevent accidental quota exhaustion.</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-card-title"><i class="fa-solid fa-circle-info"></i> Model Info Panel</div>
+            <div class="feature-card-desc">Each model has a description, strengths, limitations, rate limit, and context window.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 5 ── -->
+    <section class="doc-section" id="section-5">
+      <div class="section-number">05</div>
+      <h2>Using the AI Playground</h2>
+      <p>
+        The Playground is your primary interface for interacting with AI models. It behaves like a polished chat
+        application backed by OpenRouter's free model roster.
+      </p>
+
+      <div class="subsection" id="s5-1">
+        <h3>5.1 Selecting a Model</h3>
+        <p>
+          The model selector is accessible via the <strong style="color:var(--text-primary);">Switch Model</strong> button in the top-right of the
+          chat header, or by pressing <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>Cmd</kbd>+<kbd>K</kbd> on Mac) from
+          anywhere in the Playground.
+        </p>
+        <p>The model picker displays:</p>
+        <ul class="doc-list">
+          <li>Model name and provider</li>
+          <li>Context window size (e.g. 131K, 200K)</li>
+          <li>Rate limit (requests per minute on the free tier)</li>
+          <li>Best use description and known limitations</li>
+        </ul>
+        <p style="font-size:13.5px;color:var(--text-muted);">Use the keyboard to navigate: arrow keys to move, Enter to select, Esc to close.</p>
+      </div>
+
+      <div class="subsection" id="s5-2">
+        <h3>5.2 Model Selection Guide</h3>
+        <p>The right model depends on your task. Here is a quick reference based on the free models available on our platform:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Task Type</th>
+                <th>Recommended Model</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>General chat / default use</td>
+                <td>Meta Llama 3.3 70B Instruct</td>
+                <td>Best all-rounder on the free tier</td>
+              </tr>
+              <tr>
+                <td>Code generation / debugging</td>
+                <td>Meta Llama 3.3 70B Instruct</td>
+                <td>Strong code output, reliable instruction following</td>
+              </tr>
+              <tr>
+                <td>Long document analysis</td>
+                <td>Kimi K2.6 (Moonshot AI)</td>
+                <td>131K context, built for long-form content</td>
+              </tr>
+              <tr>
+                <td>Fast simple tasks</td>
+                <td>Llama 3.2 3B or LFM 2.5 1.2B</td>
+                <td>Low latency, suited for quick completions</td>
+              </tr>
+              <tr>
+                <td>Complex reasoning</td>
+                <td>Hermes 3 Llama 405B</td>
+                <td>Largest free model — slow but high quality</td>
+              </tr>
+              <tr>
+                <td>Near-GPT-4 quality</td>
+                <td>OpenAI gpt-oss-120b</td>
+                <td>OpenAI training quality, 200K context</td>
+              </tr>
+              <tr>
+                <td>Chinese / bilingual tasks</td>
+                <td>GLM-4.5-Air (Z-AI)</td>
+                <td>Optimized for Chinese + English</td>
+              </tr>
+              <tr>
+                <td>Experimental / testing</td>
+                <td>OpenRouter Owl Alpha</td>
+                <td>OpenRouter's own model — alpha, not for production</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection" id="s5-3">
+        <h3>5.3 Conversations and History</h3>
+        <p>
+          Every conversation you start is saved automatically with a title derived from your first message.
+          Your conversation list is in the left sidebar. You can:
+        </p>
+        <ul class="doc-list">
+          <li>Click any past conversation to continue it</li>
+          <li>Start a new conversation with the <strong style="color:var(--text-primary);">New Chat</strong> button</li>
+          <li>Switch models between conversations — each conversation remembers which model it used</li>
+        </ul>
+      </div>
+
+      <div class="subsection" id="s5-4">
+        <h3>5.4 Token Usage Display</h3>
+        <p>After every AI response, the header shows the real token breakdown for that message:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Token Display</th>
+                <th>What It Means</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>X tokens last response</td>
+                <td>Total tokens for the last exchange (prompt + completion)</td>
+              </tr>
+              <tr>
+                <td>X in</td>
+                <td>Tokens sent to the model (your message + conversation history)</td>
+              </tr>
+              <tr>
+                <td>X out</td>
+                <td>Tokens in the model's response</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout note">
+          <div class="callout-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Actual Counts, Not Estimates</div>
+            <p class="callout-text">
+              This is the actual count from OpenRouter — not an estimate. Use it to understand which models are
+              efficient for your use case.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection" id="s5-5">
+        <h3>5.5 Daily Usage Limits</h3>
+        <p>The platform enforces admin-configured daily limits per model to prevent quota exhaustion:</p>
+        <ul class="doc-list">
+          <li>Default limits: <strong style="color:var(--text-primary);">50 requests / 100,000 tokens</strong> per model per day</li>
+          <li>Limits reset at <strong style="color:var(--text-primary);">midnight UTC</strong></li>
+          <li>If you hit a limit, you will see an inline error: <code>"Daily limit reached. Resets in Xh Xm"</code></li>
+        </ul>
+        <div class="callout tip">
+          <div class="callout-icon"><i class="fa-solid fa-lightbulb"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Switch Models to Continue Working</div>
+            <p class="callout-text">
+              Limits are per-model, not global. If you hit a limit on one model, switch to a different model
+              to continue working.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 6 ── -->
+    <section class="doc-section" id="section-6">
+      <div class="section-number">06</div>
+      <h2>Managing Token Expenditure</h2>
+      <p>
+        Although the free tier has no monetary cost, token and request limits still apply. Being intentional
+        about your usage keeps the platform fast and available for the whole team.
+      </p>
+
+      <div class="subsection" id="s6-1">
+        <h3>6.1 How Tokens Work</h3>
+        <p>
+          Every word you send to an AI model and every word it returns consumes tokens. Your full conversation
+          history is sent on each new message — so long conversations consume more tokens per request than short ones.
+        </p>
+        <div class="callout note">
+          <div class="callout-icon"><i class="fa-solid fa-calculator"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Rule of Thumb</div>
+            <p class="callout-text">
+              1 token ≈ 0.75 words in English. A 500-word message is roughly 670 tokens. A model's response of
+              300 words is roughly 400 tokens. One exchange in a long conversation could easily consume
+              2,000–5,000 tokens once history is included.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection" id="s6-2">
+        <h3>6.2 Practical Tips to Reduce Token Usage</h3>
+        <ul class="doc-list">
+          <li>
+            <strong style="color:var(--text-primary);">Start a new conversation for new topics.</strong>
+            Continuing an old conversation re-sends its entire history. For a fresh topic, start fresh.
+          </li>
+          <li>
+            <strong style="color:var(--text-primary);">Be specific in your prompts.</strong>
+            Vague prompts lead to long responses. Specific prompts lead to targeted, shorter answers.
+          </li>
+          <li>
+            <strong style="color:var(--text-primary);">Use a smaller model for simple tasks.</strong>
+            Llama 3.2 3B or LFM 2.5 1.2B are much faster and have the same rate limits for trivial tasks.
+            Save the 70B for tasks that need it.
+          </li>
+          <li>
+            <strong style="color:var(--text-primary);">Monitor the token display after each response.</strong>
+            If you see unexpectedly high counts, your conversation history may have grown large.
+            Consider starting a new conversation.
+          </li>
+          <li>
+            <strong style="color:var(--text-primary);">Use the My Models tab to disable models you never use.</strong>
+            Fewer models in the picker means less cognitive overhead when switching.
+            Settings → My Models to toggle.
+          </li>
+        </ul>
+      </div>
+
+      <div class="subsection" id="s6-3">
+        <h3>6.3 Free Tier Rate Limits by Model</h3>
+        <p>
+          These are the OpenRouter free-tier rate limits for the main models available on our platform.
+          Rate limits apply globally per model across all users of OpenRouter — they are not specific to our platform.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Context</th>
+                <th>Rate Limit</th>
+                <th>Best For</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>meta-llama/llama-3.3-70b-instruct:free</code></td>
+                <td>131K</td>
+                <td>20 rpm</td>
+                <td>Default — all tasks</td>
+              </tr>
+              <tr>
+                <td><code>meta-llama/llama-3.2-3b-instruct:free</code></td>
+                <td>128K</td>
+                <td>30 rpm</td>
+                <td>Simple, fast tasks</td>
+              </tr>
+              <tr>
+                <td><code>nvidia/nemotron-nano-9b-v2:free</code></td>
+                <td>128K</td>
+                <td>30 rpm</td>
+                <td>Fast NVIDIA option</td>
+              </tr>
+              <tr>
+                <td><code>nvidia/llama-3.3-nemotron-super-49b-v1:free</code></td>
+                <td>128K</td>
+                <td>20 rpm</td>
+                <td>Quality + speed balance</td>
+              </tr>
+              <tr>
+                <td><code>nvidia/llama-3.1-nemotron-ultra-253b-v1:free</code></td>
+                <td>128K</td>
+                <td>10 rpm</td>
+                <td>High-quality NVIDIA</td>
+              </tr>
+              <tr>
+                <td><code>openai/gpt-oss-20b:free</code></td>
+                <td>200K</td>
+                <td>20 rpm</td>
+                <td>OpenAI quality, fast</td>
+              </tr>
+              <tr>
+                <td><code>openai/gpt-oss-120b:free</code></td>
+                <td>200K</td>
+                <td>10 rpm</td>
+                <td>Near GPT-4 quality</td>
+              </tr>
+              <tr>
+                <td><code>nousresearch/hermes-3-llama-3.1-405b:free</code></td>
+                <td>131K</td>
+                <td>5 rpm</td>
+                <td>Complex reasoning</td>
+              </tr>
+              <tr>
+                <td><code>moonshotai/kimi-k2.6:free</code></td>
+                <td>131K</td>
+                <td>10 rpm</td>
+                <td>Long documents</td>
+              </tr>
+              <tr>
+                <td><code>liquid/lfm-2.5-1.2b-instruct:free</code></td>
+                <td>32K</td>
+                <td>30 rpm</td>
+                <td>Minimal, instant</td>
+              </tr>
+              <tr>
+                <td><code>z-ai/glm-4.5-air:free</code></td>
+                <td>128K</td>
+                <td>20 rpm</td>
+                <td>Chinese / bilingual</td>
+              </tr>
+              <tr>
+                <td><code>openrouter/free</code></td>
+                <td>Varies</td>
+                <td>Varies</td>
+                <td>Auto-route to best free model</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 7 ── -->
+    <section class="doc-section" id="section-7">
+      <div class="section-number">07</div>
+      <h2>Managing Your Settings</h2>
+      <p>Your Settings page has three tabs: API Key, My Models, and Account.</p>
+
+      <div class="subsection">
+        <h3>7.1 API Key Tab</h3>
+        <p>This is where you add, update, or remove your OpenRouter key. Key states shown:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="color:var(--accent-green);"><i class="fa-solid fa-circle-check"></i></span> Key configured</td>
+                <td>Your key is saved, validated, and active — Playground is unlocked</td>
+              </tr>
+              <tr>
+                <td><span style="color:var(--text-muted);"><i class="fa-solid fa-circle-xmark"></i></span> No key set</td>
+                <td>You have not added a key yet — Playground is locked until you do</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          To update your key: paste the new key into the field and click <strong style="color:var(--text-primary);">Update</strong>.
+          The system validates the new key before replacing the old one.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3>7.2 My Models Tab</h3>
+        <p>
+          You can curate which models appear in your Playground model picker. By default, all admin-enabled
+          models are visible to you. Use the My Models tab to hide models you never use.
+        </p>
+        <div class="callout warning">
+          <div class="callout-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="callout-body">
+            <div class="callout-title">Note</div>
+            <p class="callout-text">
+              If you disable all models in My Models, the Playground will show a warning banner and you will be
+              unable to send messages. Re-enable at least one model to restore functionality.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>7.3 Account Tab</h3>
+        <p>
+          Change your platform password here. This does not affect your OpenRouter account — it only changes
+          your login to our internal platform.
+        </p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 8 ── -->
+    <section class="doc-section" id="section-8">
+      <div class="section-number">08</div>
+      <h2>Troubleshooting</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Problem</th>
+              <th>Solution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"Please add your OpenRouter API key" banner in Playground</td>
+              <td>Go to Settings → API Key tab, paste your <code>sk-or-v1-...</code> key, and click Save.</td>
+            </tr>
+            <tr>
+              <td>"Failed to save API key" error on Settings page</td>
+              <td>Your key failed validation. Double-check you copied the full key from OpenRouter. Regenerate if needed.</td>
+            </tr>
+            <tr>
+              <td>"Daily limit reached" error mid-conversation</td>
+              <td>You've hit the per-model daily cap. Switch to a different model and continue. Limits reset at midnight UTC.</td>
+            </tr>
+            <tr>
+              <td>Model responses are slow (20–40 seconds)</td>
+              <td>Large models like <code>gpt-oss-120b</code> and Hermes 405B are inherently slow on the free tier. Switch to Llama 3.3 70B or a smaller model for faster results.</td>
+            </tr>
+            <tr>
+              <td>Playground shows all models disabled warning</td>
+              <td>Go to Settings → My Models and re-enable at least one model.</td>
+            </tr>
+            <tr>
+              <td>Token counts seem unexpectedly high</td>
+              <td>Long conversations send full history each request. Start a new conversation to reset context.</td>
+            </tr>
+            <tr>
+              <td>OpenRouter API key rejected on openrouter.ai</td>
+              <td>You may have hit your account-level rate limit. Wait a minute and retry, or generate a new key.</td>
+            </tr>
+            <tr>
+              <td>Cannot log in to the platform</td>
+              <td>Ensure you are using the correct email and platform password. Contact the admin to reset if needed.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ── Section 9 ── -->
+    <section class="doc-section" id="section-9">
+      <div class="section-number">09</div>
+      <h2>Quick Reference Checklist</h2>
+      <p>Use this checklist when onboarding. Click each item to mark it complete.</p>
+
+      <ul class="checklist" id="checklist">
+        <li data-idx="0">
+          <div class="check-num">01</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Create a free OpenRouter account at <a href="https://openrouter.ai" target="_blank">https://openrouter.ai</a></span>
+        </li>
+        <li data-idx="1">
+          <div class="check-num">02</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Navigate to Keys and generate a new API key</span>
+        </li>
+        <li data-idx="2">
+          <div class="check-num">03</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Copy and securely save your <code>sk-or-v1-...</code> key</span>
+        </li>
+        <li data-idx="3">
+          <div class="check-num">04</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Register on our internal platform with your work email</span>
+        </li>
+        <li data-idx="4">
+          <div class="check-num">05</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Go to Settings → API Key, paste your key, and click Save</span>
+        </li>
+        <li data-idx="5">
+          <div class="check-num">06</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Confirm the Playground is unlocked (no banner shown)</span>
+        </li>
+        <li data-idx="6">
+          <div class="check-num">07</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Send your first test message using Meta Llama 3.3 70B</span>
+        </li>
+        <li data-idx="7">
+          <div class="check-num">08</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Check the token usage display in the header</span>
+        </li>
+        <li data-idx="8">
+          <div class="check-num">09</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Browse Settings → My Models to customize your model list</span>
+        </li>
+        <li data-idx="9">
+          <div class="check-num">10</div>
+          <div class="checklist-checkbox" role="checkbox" tabindex="0"></div>
+          <span class="check-text">Review Section 6 of this guide to understand usage limits</span>
+        </li>
+      </ul>
+
+      <div class="callout note" style="margin-top:28px;">
+        <div class="callout-icon"><i class="fa-solid fa-headset"></i></div>
+        <div class="callout-body">
+          <div class="callout-title">Need Help?</div>
+          <p class="callout-text">
+            For OpenRouter account issues (key validation, account access), visit
+            <a href="https://openrouter.ai/docs" target="_blank">https://openrouter.ai/docs</a>
+            or the OpenRouter Discord community.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-left">
+        OpenRouter Getting Started Guide &nbsp;·&nbsp; Prepared by Oliver &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Internal Use Only
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/aspect-study" target="_blank">
+          <i class="fa-brands fa-github"></i> aspect-study
+        </a>
+        <a href="https://openrouter.ai/docs" target="_blank">
+          <i class="fa-solid fa-book"></i> OpenRouter Docs
+        </a>
+        <a href="https://openrouter.ai" target="_blank">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> openrouter.ai
+        </a>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- Back to Top -->
+<button id="back-to-top" title="Back to top">
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<script type="module">
+  // ── Pretext CDN (vendor available but using module import for simplicity)
+  // import { prepare, layout } from 'https://esm.sh/@chenglou/pretext';
+  // Pretext layout is handled via CSS for this documentation page.
+
+  // ── Scrollspy ──
+  const tocLinks = document.querySelectorAll('.toc-link[data-target]');
+  const sections = [];
+  tocLinks.forEach(link => {
+    const el = document.getElementById(link.dataset.target);
+    if (el) sections.push({ el, link });
+  });
+
+  function updateActive() {
+    const scrollY = window.scrollY + 100;
+    let active = null;
+    for (const { el } of sections) {
+      if (el.offsetTop <= scrollY) active = el.id;
+    }
+    tocLinks.forEach(link => {
+      link.classList.toggle('active', link.dataset.target === active);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  // ── TOC smooth scroll ──
+  tocLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const el = document.getElementById(link.dataset.target);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Close sidebar on mobile
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+    });
+  });
+
+  // ── Sidebar search ──
+  const searchInput = document.getElementById('sidebar-search');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    tocLinks.forEach(link => {
+      const text = link.textContent.toLowerCase();
+      link.classList.toggle('hidden', q.length > 0 && !text.includes(q));
+    });
+    // Also hide section labels if all their links are hidden
+    document.querySelectorAll('.toc-section-label').forEach(label => {
+      let next = label.nextElementSibling;
+      let allHidden = true;
+      while (next && !next.classList.contains('toc-section-label')) {
+        if (!next.classList.contains('hidden')) { allHidden = false; break; }
+        next = next.nextElementSibling;
+      }
+      label.style.display = allHidden && q.length > 0 ? 'none' : '';
+    });
+  });
+
+  // ── Copy buttons ──
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+        }, 2000);
+      });
+    });
+  });
+
+  // ── Back to top ──
+  const backBtn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    backBtn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  backBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ── Mobile sidebar ──
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const mobileToggle = document.getElementById('mobile-toggle');
+
+  mobileToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  });
+
+  // ── Checklist ──
+  const checklistItems = document.querySelectorAll('.checklist li');
+  const STORAGE_KEY = 'openrouter-checklist';
+
+  function loadChecklist() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      checklistItems.forEach(item => {
+        const idx = item.dataset.idx;
+        if (saved[idx]) item.classList.add('checked');
+      });
+    } catch {}
+  }
+
+  function saveChecklist() {
+    const state = {};
+    checklistItems.forEach(item => {
+      state[item.dataset.idx] = item.classList.contains('checked');
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  checklistItems.forEach(item => {
+    const checkbox = item.querySelector('.checklist-checkbox');
+    function toggle() {
+      item.classList.toggle('checked');
+      saveChecklist();
+    }
+    item.addEventListener('click', toggle);
+    checkbox.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+    });
+  });
+
+  loadChecklist();
+</script>
+</body>
+</html>
